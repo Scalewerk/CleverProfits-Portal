@@ -24,12 +24,32 @@ export default async function DashboardPage() {
   }
 
   // Get user and their company
-  const user = await prisma.user.findUnique({
-    where: { clerkUserId: userId },
-    include: {
-      company: true,
-    },
-  });
+  let user;
+  try {
+    user = await prisma.user.findUnique({
+      where: { clerkUserId: userId },
+      include: {
+        company: true,
+      },
+    });
+  } catch (error) {
+    console.error("Database error:", error);
+    return (
+      <DashboardLayout>
+        <div className="flex flex-col items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold text-red-600 mb-2">Database Connection Error</h2>
+            <p className="text-muted-foreground">
+              {error instanceof Error ? error.message : "Unable to connect to database"}
+            </p>
+            <p className="text-sm text-muted-foreground mt-4">
+              Please check your DATABASE_URL configuration.
+            </p>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   // If user doesn't exist in our DB yet, show setup message
   if (!user) {

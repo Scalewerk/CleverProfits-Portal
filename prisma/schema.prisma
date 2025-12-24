@@ -1,0 +1,170 @@
+// CleverProfits Portal - Database Schema
+// Run `npx prisma db push` to sync with database
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+// ===========================================
+// COMPANIES & USERS
+// ===========================================
+
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  users        User[]
+  reports      Report[]
+  metricConfig ClientMetricConfig?
+
+  @@map("companies")
+}
+
+model User {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  clerkUserId String    @unique @map("clerk_user_id")
+  role        String    @default("viewer") // admin | viewer
+  companyId   String?   @map("company_id") // Optional - unlinked users have null
+  createdAt   DateTime  @default(now()) @map("created_at")
+  lastLoginAt DateTime? @map("last_login_at")
+
+  // Relations
+  company    Company?    @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  accessLogs AccessLog[]
+
+  @@index([companyId])
+  @@index([clerkUserId])
+  @@map("users")
+}
+
+// ===========================================
+// METRIC CONFIGURATION
+// ===========================================
+
+model ClientMetricConfig {
+  id        String @id @default(cuid())
+  companyId String @unique @map("company_id")
+
+  // Section-level toggles (9 sections from financial report)
+  includeExecutiveSnapshot    Boolean @default(true) @map("include_executive_snapshot")
+  includeRevenuePerformance   Boolean @default(true) @map("include_revenue_performance")
+  includeCogsGrossMargin      Boolean @default(true) @map("include_cogs_gross_margin")
+  includeOperatingExpenses    Boolean @default(true) @map("include_operating_expenses")
+  includeProfitabilityBridges Boolean @default(false) @map("include_profitability_bridges")
+  includeVariancePerformance  Boolean @default(false) @map("include_variance_performance")
+  includeCashFlowLiquidity    Boolean @default(false) @map("include_cash_flow_liquidity")
+  includeBalanceSheetHealth   Boolean @default(false) @map("include_balance_sheet_health")
+  includeRiskControls         Boolean @default(false) @map("include_risk_controls")
+
+  // Individual metrics (flexible JSONB)
+  // Structure: { section_key: [metric_id, ...] }
+  enabledMetrics Json @default("{}") @map("enabled_metrics")
+
+  // Preset tracking
+  preset String @default("standard") // basic | standard | advanced | custom
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("client_metric_configs")
+}
+
+// ===========================================
+// REPORTS
+// ===========================================
+
+model Report {
+  id        String @id @default(cuid())
+  companyId String @map("company_id")
+
+  // Reporting period
+  periodEnd   DateTime @map("period_end") @db.Date
+  periodLabel String?  @map("period_label") // e.g., "October 2025"
+
+  // Processing status
+  status       String  @default("processing") // processing | complete | failed
+  errorMessage String? @map("error_message")
+
+  // File URLs (Supabase storage paths)
+  sourceFileUrl String? @map("source_file_url") // Original Excel
+  pdfFileUrl    String? @map("pdf_file_url") // Generated PDF (optional)
+
+  // Publishing control
+  published Boolean @default(false)
+
+  // Metadata
+  claudeRunId String? @map("claude_run_id") // For debugging
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  company    Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  sections   ReportSection[]
+  accessLogs AccessLog[]
+
+  @@index([companyId])
+  @@index([status])
+  @@index([periodEnd(sort: Desc)])
+  @@map("reports")
+}
+
+model ReportSection {
+  id       String @id @default(cuid())
+  reportId String @map("report_id")
+
+  // Section metadata
+  sectionKey  String @map("section_key") // e.g., "executive_snapshot"
+  sectionName String @map("section_name") // e.g., "1. Executive Snapshot"
+  sortOrder   Int    @map("sort_order") // Display order (1-9)
+
+  // Structured content for dynamic rendering
+  // { tables: [...], insights: [...], questions: [...], raw_markdown: "..." }
+  content Json
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+  @@index([sectionKey])
+  @@map("report_sections")
+}
+
+// ===========================================
+// ACCESS LOGS (AUDIT TRAIL)
+// ===========================================
+
+model AccessLog {
+  id       String @id @default(cuid())
+  userId   String? @map("user_id")
+  reportId String? @map("report_id")
+
+  action    String // viewed | downloaded_pdf | downloaded_excel
+  ipAddress String? @map("ip_address")
+  userAgent String? @map("user_agent")
+
+  timestamp DateTime @default(now())
+
+  // Relations
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  report Report? @relation(fields: [reportId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([reportId])
+  @@index([timestamp(sort: Desc)])
+  @@map("access_logs")
+}

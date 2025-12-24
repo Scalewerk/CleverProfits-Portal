@@ -1,0 +1,693 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* CleverProfits Brand Colors */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 217 91% 40%;           /* Deep blue: #1e56a0 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96%;         /* Light blue-gray */
+    --secondary-foreground: 217 91% 40%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 43 96% 56%;             /* Gold accent: #f2b705 */
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 91% 40%;
+    --radius: 0.5rem;
+
+    /* Semantic colors for financial data */
+    --positive: 142 76% 36%;          /* Green for gains */
+    --negative: 0 84% 60%;            /* Red for losses */
+    --neutral: 220 9% 46%;            /* Gray for N/A */
+  }
+
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 43 96% 56%;
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 55%;
+
+    --positive: 142 76% 46%;
+    --negative: 0 84% 60%;
+    --neutral: 220 9% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
+}
+
+/* ============================================
+   BIG 4 / INVESTMENT BANKING REPORT STYLES
+   ============================================ */
+
+/* Tabular numbers for financial data */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Financial number styling */
+.financial-negative {
+  @apply text-red-600 dark:text-red-400;
+}
+
+.financial-positive {
+  @apply text-emerald-600 dark:text-emerald-400;
+}
+
+.financial-zero {
+  @apply text-slate-400 dark:text-slate-500;
+}
+
+.financial-na {
+  @apply text-slate-400 dark:text-slate-500 italic;
+}
+
+/* Material variance highlighting */
+.variance-material {
+  @apply bg-amber-100 dark:bg-amber-900/30 px-1.5 py-0.5 rounded font-medium;
+}
+
+.variance-material.negative {
+  @apply bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400;
+}
+
+.variance-material.positive {
+  @apply bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400;
+}
+
+/* IB-style table */
+.ib-table {
+  @apply w-full border-collapse;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.ib-table thead {
+  @apply bg-slate-50 dark:bg-slate-800/50 border-b-2 border-slate-300 dark:border-slate-600;
+}
+
+.ib-table th {
+  @apply px-3 py-2.5 text-left text-slate-600 dark:text-slate-400;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ib-table th:not(:first-child) {
+  @apply text-right;
+}
+
+.ib-table td {
+  @apply px-3 py-2.5 border-b border-slate-100 dark:border-slate-700/50;
+}
+
+.ib-table td:first-child {
+  @apply font-medium text-slate-900 dark:text-slate-100;
+}
+
+.ib-table td:not(:first-child) {
+  @apply text-right font-mono tabular-nums;
+  font-size: 0.8125rem;
+}
+
+.ib-table tbody tr:hover {
+  @apply bg-slate-50/50 dark:bg-slate-800/30;
+}
+
+.ib-table .row-total {
+  @apply font-semibold bg-slate-100 dark:bg-slate-800 border-t-2 border-slate-300 dark:border-slate-600;
+}
+
+.ib-table .row-total td {
+  @apply font-semibold;
+}
+
+.ib-table .row-subtotal {
+  @apply font-medium bg-slate-50/50 dark:bg-slate-800/30;
+}
+
+.ib-table .cell-indent {
+  @apply pl-6;
+}
+
+/* Legacy financial-table (updated) */
+.financial-table {
+  @apply w-full border-collapse;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.financial-table thead {
+  @apply bg-slate-50 dark:bg-slate-800/50 border-b-2 border-slate-300 dark:border-slate-600;
+}
+
+.financial-table th {
+  @apply px-3 py-2.5 text-left text-slate-600 dark:text-slate-400;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.financial-table th:not(:first-child) {
+  @apply text-right;
+}
+
+.financial-table td {
+  @apply px-3 py-2.5 border-b border-slate-100 dark:border-slate-700/50;
+}
+
+.financial-table td:first-child {
+  @apply font-medium text-slate-900 dark:text-slate-100;
+  min-width: 140px;
+  max-width: 240px;
+}
+
+.financial-table td:not(:first-child) {
+  @apply text-right font-mono;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.financial-table tbody tr:hover {
+  @apply bg-slate-50/50 dark:bg-slate-800/30;
+}
+
+.financial-table .row-total,
+.financial-table tr.total-row {
+  @apply font-semibold bg-slate-100 dark:bg-slate-800 border-t-2 border-slate-300 dark:border-slate-600;
+}
+
+.financial-table .row-total td,
+.financial-table tr.total-row td {
+  @apply font-semibold;
+}
+
+/* Positive/negative value styling */
+.financial-table td.positive,
+.value-positive {
+  @apply text-emerald-600 dark:text-emerald-400 font-medium;
+}
+
+.financial-table td.negative,
+.value-negative {
+  @apply text-red-600 dark:text-red-400 font-medium;
+}
+
+/* Section headers - Big 4 style */
+.section-header {
+  @apply flex items-baseline gap-4 pt-8 pb-4 mt-8 border-b-2 border-blue-700 dark:border-blue-500;
+}
+
+.section-header:first-child {
+  @apply mt-0;
+}
+
+.section-number {
+  @apply text-2xl font-bold text-blue-700 dark:text-blue-400 min-w-[2rem];
+}
+
+.section-title {
+  @apply text-lg font-semibold uppercase tracking-wide text-slate-900 dark:text-slate-100;
+}
+
+.subsection-header {
+  @apply text-base font-semibold text-slate-700 dark:text-slate-300 mt-6 mb-3 pb-2 border-b border-slate-200 dark:border-slate-700;
+}
+
+/* Callout boxes - Key Takeaways */
+.callout-takeaways {
+  @apply border-l-4 border-blue-700 dark:border-blue-500 bg-slate-50 dark:bg-slate-800/50 p-5 my-6;
+}
+
+.callout-questions {
+  @apply border-l-4 border-amber-500 bg-amber-50/50 dark:bg-amber-900/20 p-5 my-6;
+}
+
+.callout-header {
+  @apply text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4;
+  letter-spacing: 0.1em;
+}
+
+.callout-list {
+  @apply list-none p-0 m-0;
+}
+
+.callout-list > li {
+  @apply flex gap-3 leading-relaxed text-slate-700 dark:text-slate-300;
+  padding-left: 0 !important;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.callout-list > li:first-child {
+  margin-top: 0;
+}
+
+.callout-list > li:last-child {
+  margin-bottom: 0;
+}
+
+/* Nested lists inside callout-list */
+.callout-list li ul,
+.callout-list li ol {
+  @apply list-none p-0 m-0 mt-1;
+  margin-left: 0;
+}
+
+.callout-list li ul > li,
+.callout-list li ol > li {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Remove paragraph margins inside list items */
+.callout-list li p {
+  margin: 0 !important;
+  display: inline;
+}
+
+.callout-bullet {
+  @apply flex-shrink-0 font-bold mt-0.5;
+}
+
+.callout-takeaways .callout-bullet {
+  @apply text-blue-700 dark:text-blue-400;
+}
+
+.callout-questions .callout-bullet {
+  @apply text-amber-600 dark:text-amber-400;
+}
+
+/* Interpretation blocks */
+.interpretation {
+  @apply border-l-4 border-slate-400 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 px-4 py-3 my-4 italic text-slate-600 dark:text-slate-400;
+}
+
+.interpretation strong,
+.interpretation .label {
+  @apply not-italic font-semibold text-slate-700 dark:text-slate-300;
+}
+
+/* Executive insights */
+.executive-insights {
+  @apply bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg p-6 my-6;
+}
+
+.executive-insights-header {
+  @apply text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4 pb-3 border-b border-slate-200 dark:border-slate-700;
+  letter-spacing: 0.1em;
+}
+
+.insight-item {
+  @apply flex gap-4 py-3 border-b border-slate-100 dark:border-slate-700/50;
+}
+
+.insight-item:last-child {
+  @apply border-b-0 pb-0;
+}
+
+.insight-number {
+  @apply flex-shrink-0 w-7 h-7 bg-blue-700 dark:bg-blue-600 text-white rounded-md flex items-center justify-center text-sm font-semibold;
+}
+
+.insight-text {
+  @apply text-slate-700 dark:text-slate-300 leading-relaxed pt-0.5;
+}
+
+.insight-text strong {
+  @apply text-slate-900 dark:text-slate-100 font-semibold;
+}
+
+/* Report content container */
+.report-content {
+  @apply space-y-2 w-full;
+  max-width: none;
+}
+
+.report-content h2:first-child,
+.report-content h3:first-child {
+  @apply mt-0;
+}
+
+/* Consistent list styling in report content */
+.report-content ul,
+.report-content ol {
+  @apply list-none m-0;
+  padding-left: 0 !important;
+}
+
+.report-content > ul > li,
+.report-content > ol > li {
+  @apply flex items-start gap-3;
+  padding-left: 0 !important;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.report-content > ul > li:first-child,
+.report-content > ol > li:first-child {
+  margin-top: 0;
+}
+
+.report-content > ul > li:last-child,
+.report-content > ol > li:last-child {
+  margin-bottom: 0;
+}
+
+/* Nested lists */
+.report-content li ul,
+.report-content li ol {
+  @apply list-none p-0 mt-1 mb-0;
+  margin-left: 0;
+}
+
+.report-content li ul > li,
+.report-content li ol > li {
+  @apply flex items-start gap-3;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+/* Remove margins from paragraphs inside list items */
+.report-content li p {
+  margin: 0 !important;
+  display: inline;
+}
+
+/* Ensure bullet alignment */
+.report-content li > span:first-child,
+.report-content li > div > span:first-child {
+  @apply flex-shrink-0;
+}
+
+.report-content li > span:last-child,
+.report-content li > div:last-child {
+  @apply flex-1;
+}
+
+/* Handle nested strong/bold text in lists */
+.report-content li strong {
+  @apply text-foreground;
+}
+
+/* Ensure tables don't overflow on large screens */
+@media (min-width: 1024px) {
+  .financial-table {
+    table-layout: auto;
+  }
+
+  .financial-table td:first-child {
+    max-width: 280px;
+  }
+}
+
+/* Loading spinner */
+.spinner {
+  @apply animate-spin rounded-full border-2 border-muted border-t-primary;
+}
+
+/* Mobile responsive table adjustments */
+@media (max-width: 640px) {
+  .financial-table {
+    @apply text-xs;
+  }
+
+  .financial-table th,
+  .financial-table td {
+    @apply px-2 py-2;
+  }
+
+  .financial-table th {
+    @apply text-[10px];
+  }
+}
+
+/* Prevent horizontal overflow on mobile */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden;
+  }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+/* Page transition fade in */
+.page-transition {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card hover lift effect */
+.card-hover {
+  @apply transition-all duration-200;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgb(0 0 0 / 0.1);
+}
+
+/* Button press effect */
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Smooth color transitions */
+a, button {
+  @apply transition-colors duration-150;
+}
+
+/* Section expand animation */
+.section-content {
+  animation: expandIn 0.3s ease-out;
+}
+
+@keyframes expandIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Loading skeleton pulse */
+.skeleton {
+  animation: pulse 1.5s ease-in-out infinite;
+  @apply bg-muted rounded;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+  /* Hide non-essential elements */
+  header,
+  nav,
+  .sidebar,
+  .no-print,
+  button,
+  .section-nav,
+  .mobile-nav {
+    display: none !important;
+  }
+
+  /* Reset layout for print */
+  body {
+    font-size: 11pt;
+    line-height: 1.4;
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  /* Full width content */
+  main,
+  .report-content {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Page breaks */
+  .report-section {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+
+  table {
+    page-break-inside: avoid;
+  }
+
+  /* Table styling for print */
+  .financial-table {
+    font-size: 9pt;
+    border: 1px solid #000;
+  }
+
+  .financial-table th,
+  .financial-table td {
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+  }
+
+  /* Ensure colors print */
+  .text-red-600,
+  .text-red-400,
+  .negative {
+    color: #dc2626 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .text-green-600,
+  .text-green-400,
+  .text-emerald-600,
+  .text-emerald-400,
+  .positive {
+    color: #16a34a !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Key takeaways boxes */
+  .bg-blue-50 {
+    background-color: #eff6ff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .bg-amber-50 {
+    background-color: #fffbeb !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .border-blue-500 {
+    border-color: #3b82f6 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .border-amber-500 {
+    border-color: #f59e0b !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Card styling for print */
+  .card {
+    border: 1px solid #e5e7eb !important;
+    box-shadow: none !important;
+  }
+
+  /* Page settings */
+  @page {
+    margin: 0.75in;
+    size: letter;
+  }
+
+  /* First page header */
+  .print-header {
+    display: block !important;
+    text-align: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #1e56a0;
+  }
+}

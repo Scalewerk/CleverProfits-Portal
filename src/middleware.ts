@@ -20,8 +20,10 @@ export default clerkMiddleware(async (auth, request) => {
     return;
   }
 
-  // Protect all other routes
-  await auth.protect();
+  // Protect all other routes - redirect to sign-in if not authenticated
+  await auth.protect({
+    unauthenticatedUrl: '/sign-in',
+  });
 
   // TODO: Add admin role check for admin routes
   // if (isAdminRoute(request)) {
